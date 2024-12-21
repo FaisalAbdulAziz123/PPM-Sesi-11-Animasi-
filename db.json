@@ -1,0 +1,34 @@
+
+{
+    "products": [
+      {
+        "id": 1,
+        "name": "Produk 1",
+        "description": "Deskripsi produk 1",
+        "price": 15000,
+        "image": "https://via.placeholder.com/200"
+      },
+      {
+        "id": 2,
+        "name": "Produk 2",
+        "description": "Deskripsi produk 2",
+        "price": 25000,
+        "image": "https://via.placeholder.com/200"
+      },
+      {
+        "id": 3,
+        "name": "Produk 3",
+        "description": "Deskripsi produk 3",
+        "price": 30000,
+        "image": "https://via.placeholder.com/200"
+      }
+    ],
+    "cart": [
+      {
+        "id": 1,
+        "productId": 1,
+        "quantity": 2
+      }
+    ]
+  }
+  

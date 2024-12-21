@@ -1,118 +1,84 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
   View,
+  Text,
+  Animated,
+  ScrollView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import * as Animatable from 'react-native-animatable';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const App = () => {
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const [visible, setVisible] = useState(false);
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+  const handleScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollPosition = e.nativeEvent.contentOffset.y;
+    const position = scrollPosition > 0;
+    setVisible(position);
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    setTimeout(() => {
+      setVisible(false);
+    }, 1000);
   };
 
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+  useEffect(() => {
+    Animated.timing(scrollY, {
+      toValue: visible ? 100 : 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, [visible, scrollY]);
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+  return (
+    <View>
+      <ScrollView onScroll={handleScroll} showsVerticalScrollIndicator={false}>
+        {Array.from({length: 20}, (_, i) => (
+          <Animatable.View
+            animation={'fadeInRight'}
+            duration={i * 100}
+            key={i}
+            style={{
+              marginVertical: 10,
+              marginHorizontal: 20,
+              height: 50,
+              backgroundColor: 'silver',
+            }}>
+            <Text>{i}</Text>
+            <Text style={{
+              fontWeight: 'bold',
+              fontSize: 20,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}>Faisal Abdul Aziz</Text>
+          </Animatable.View>
+        ))}
+      </ScrollView>
+      <Animated.View
+        style={{
+          position: 'absolute',
+          bottom: 10,
+          borderRadius: 50,
+          width: '96%',
+          marginHorizontal: 10,
+          height: 50,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'blue',
+          transform: [{translateY: scrollY}],
+        }}>
+        <Text
+          style={{
+            color: 'white',
+            fontSize: 20,
+            textAlign: 'center',
+          }}>
+          Button checkout
+        </Text>
+      </Animated.View>
+    </View>
+  );
+};
 
 export default App;
